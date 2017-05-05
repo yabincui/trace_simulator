@@ -1,0 +1,29 @@
+#ifdef CREATE_TRACE_POINTS
+#undef CREATE_TRACE_POINTS
+
+#include "macro_utils.h"
+
+#undef TRACE_EVENT
+#define TRACE_EVENT(name, proto, args) \
+  DEFINE_TRACE(name)
+
+#ifndef TRACE_INCLUDE_FILE
+#define TRACE_INCLUDE_FILE __STRINGIFY(__CONCAT_TWO(trace_, TRACE_SYSTEM.h))
+#define UNDEF_TRACE_INCLUDE_FILE
+#endif
+
+#undef TRACE_INCLUDE
+
+#define TRACE_HEADER_MULTI_READ
+#include TRACE_INCLUDE_FILE
+
+#undef TRACE_EVENT
+
+#ifdef UNDEF_TRACE_INCLUDE_FILE
+#undef TRACE_INCLUDE_FILE
+#undef UNDEF_TRACE_INCLUDE_FILE
+#endif
+
+#define CREATE_TRACE_POINTS
+
+#endif  // CREATE_TRACE_POINTS
